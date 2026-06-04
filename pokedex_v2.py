@@ -32,13 +32,14 @@ async def process_pokemon(pokemon, client):
         name = move['move']['name']
         if move['version_group_details'][0]['level_learned_at'] >= 20:
             strong_moves.append(name)
+    await asyncio.sleep(0.1)
     return {'name': pokemon['name'], 'strong_moves': strong_moves}
 
 
 async def run(client, budget=BUDGET):
     results = []
     async for page in fetch(client):
-        for batch in batched(page['results'], 10):
+        for batch in batched(page['results'], 20):
             results += await asyncio.gather(*[process_pokemon(pokemon, client) for pokemon in batch])
             if len(results) >= budget:
                 return results
@@ -48,7 +49,6 @@ async def run(client, budget=BUDGET):
 async def main():
     async with httpx.AsyncClient() as client:
         return await run(client)
-
 
 if __name__ == '__main__':
     start = time.perf_counter()
@@ -61,4 +61,3 @@ if __name__ == '__main__':
 
     print(f"{len(results)} pokemon in {elapsed:.2f}s "
           f"({elapsed / len(results) * 1000:.0f} ms each)")
-
