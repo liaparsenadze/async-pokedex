@@ -47,4 +47,5 @@ The event loop only switches at await; a call that doesn't await (sleep, sync HT
       await asyncio.sleep(1)    # ✅ yields control to the loop
       print(f"{n} done")
 '''
- 
+## Version 3. Async with Semaphore
+Slight improvement over batching.
